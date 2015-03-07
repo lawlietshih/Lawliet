@@ -1,3 +1,3 @@
 # Lawliet
 
-It belongs to Lawliet's Projet.
+It belongs to Lawliet's Project.
