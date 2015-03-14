@@ -17,8 +17,7 @@ exe:
 	cd $(TOP_DIR)
 
 del:
-	rm -f *~
-	ls -la
+	find . -name '*~' -exec rm -v {} \;
 
 user_app:
 	echo "make AP..."

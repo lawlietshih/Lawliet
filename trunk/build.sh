@@ -4,6 +4,7 @@ module=1
 
 echo
 echo    "********************************************************************************"
+echo    "* 0. Remove all ~ files                                                         "
 echo    "* 1. Build sys_server                                                           "
 echo    "* 2. Build sys_client                                                           "
 echo    "*                                                                               "
@@ -11,7 +12,10 @@ echo    "***********************************************************************
 echo -n "Please select the module to build: "
 read module
 
-case $module in 
+case $module in
+	0)
+		make del
+		;; 
 	1)
 		source ./sync_version.sh
 		make clean
