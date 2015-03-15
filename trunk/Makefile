@@ -19,6 +19,15 @@ exe:
 del:
 	find . -name '*~' -exec rm -v {} \;
 
+permit:
+	find -type d -exec chmod 755 {} \;
+	find -type f -exec chmod 755 {} \;
+
+third_party:
+	make -j6 -C $(APP_DIR) third_clean
+	make -j6 -C $(APP_DIR) third
+	cd $(TOP_DIR)
+
 user_app:
 	echo "make AP..."
 	rm -rf $(RELEASE_DIR)/*_ap_*
@@ -40,5 +49,11 @@ clean_user_app:
 	rm -rf $(RELEASE_DIR)/*_ap_*
 
 clean: clean_user_app
+	make -j6 -C $(APP_DIR) third_clean
 	rm -rf $(RELEASE_DIR)/*.laf
+	cd $(TOP_DIR)
 	echo "clean all"
+
+kill_process:
+	make -j6 -C $(APP_DIR) kill_proc
+	cd $(TOP_DIR) 
