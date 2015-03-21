@@ -44,8 +44,13 @@ git reset HEAD trunk/src/app/main.o
 
 git diff HEAD
 git status
+# On branch master
+nothing to commit (working directory clean)
 
 git pull origin master
+From https://github.com/lawlietshih/Lawliet
+ * branch            master     -> FETCH_HEAD
+Already up-to-date.
 git config --global user.email "prjlawliet@gmail.com" 
 git config --global user.name "lawlietshih"
 git commit -am "commit msg"
