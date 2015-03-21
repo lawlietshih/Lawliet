@@ -26,3 +26,18 @@ gksudo gedit filename
 --------------------------------------------------------------------------------------------------------------------------------
 
 #svn skill
+
+svn export
+svn co
+
+svn info
+
+svn mv
+svn add
+svn delete (del, remove, rm)
+
+svn up
+svn diff > 2012110801.txt 
+svn st | grep ^[^?]
+svn ci -m "commit msg"
+
