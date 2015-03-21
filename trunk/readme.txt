@@ -23,6 +23,14 @@ gksudo gedit filename
 
 #git skill
 
+workspace / stage(index) / local repository / remote repository
+git ls-files
+git diff                 => workspace vs stage
+git diff HEAD            => workspace vs HEAD
+git diff --cached HEAD   => stage     vs HEAD
+git diff --cached        => stage     vs HEAD
+git diff HEAD^ HEAD      => HEAD^     vs HEAD
+
 git clone https://github.com/lawlietshih/Lawliet.git
 
 git log -1
