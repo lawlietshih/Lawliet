@@ -36,7 +36,8 @@ git clone https://github.com/lawlietshih/Lawliet.git
 
 git tag
 git branch
-git log -1
+git log -1 (git commit)
+git shortlog
 
 git rm 
 git mv
@@ -57,9 +58,11 @@ Already up-to-date.
 git config --global user.email "prjlawliet@gmail.com" 
 git config --global user.name "lawlietshih"
 git commit -am "commit msg"
+git reset --hard HEAD
 git reset --hard ORIG_HEAD
+git reset --soft "HEAD^"
 
-git push -u origin master
+git push -u origin master = git fetch + git merge origin/master
 Username for 'https://github.com': lawlietshih         
 Password for 'https://lawlietshih@github.com': "
 
