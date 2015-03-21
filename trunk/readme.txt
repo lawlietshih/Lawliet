@@ -14,16 +14,38 @@ echo "PRJ = /home/lawliet/Lawliet/trunk        "
 echo "@2015/03/07                              "
 echo "-----------------------------------------"
 
---------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 
 #if we can't edit the file
 gksudo gedit filename
 
---------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 
 #git skill
 
---------------------------------------------------------------------------------------------------------------------------------
+git clone https://github.com/lawlietshih/Lawliet.git
+
+git log -1
+
+git rm 
+git mv
+git add *
+git add .
+git reset HEAD trunk/src/app/main.o
+
+git diff
+git status
+
+git pull origin master
+git config --global user.email "prjlawliet@gmail.com" 
+git config --global user.name "lawlietshih"
+git commit -am "commit msg"
+
+git push -u origin master
+Username for 'https://github.com': lawlietshih         
+Password for 'https://lawlietshih@github.com': "
+
+--------------------------------------------------------------------------------------------------------
 
 #svn skill
 
