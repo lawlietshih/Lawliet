@@ -13,7 +13,7 @@ all:firmware
 
 exe:
 	cd $(APP_RLS_DIR) ; \
-	./lawliet
+	sudo ./lawliet
 	cd $(TOP_DIR)
 
 del:
