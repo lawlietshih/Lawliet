@@ -25,10 +25,11 @@ gksudo gedit filename
 
 workspace / stage(index) / local repository / remote repository
 git ls-files
+git log --pretty=oneline
 git diff                 => workspace vs stage
-git diff HEAD            => workspace vs HEAD
 git diff --cached HEAD   => stage     vs HEAD
 git diff --cached        => stage     vs HEAD
+git diff HEAD            => workspace vs HEAD
 git diff HEAD^ HEAD      => HEAD^     vs HEAD
 
 git clone https://github.com/lawlietshih/Lawliet.git
@@ -41,7 +42,7 @@ git add *
 git add .
 git reset HEAD trunk/src/app/main.o
 
-git diff
+git diff HEAD
 git status
 
 git pull origin master
