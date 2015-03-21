@@ -34,6 +34,8 @@ git diff HEAD^ HEAD      => HEAD^     vs HEAD
 
 git clone https://github.com/lawlietshih/Lawliet.git
 
+git tag
+git branch
 git log -1
 
 git rm 
@@ -43,6 +45,7 @@ git add .
 git reset HEAD trunk/src/app/main.o
 
 git diff HEAD
+git status -s
 git status
 # On branch master
 nothing to commit (working directory clean)
@@ -54,10 +57,26 @@ Already up-to-date.
 git config --global user.email "prjlawliet@gmail.com" 
 git config --global user.name "lawlietshih"
 git commit -am "commit msg"
+git reset --hard ORIG_HEAD
 
 git push -u origin master
 Username for 'https://github.com': lawlietshih         
 Password for 'https://lawlietshih@github.com': "
+
+--------------------------------------------------------------------------------------------------------
+
+git config --global alias.co   checkout
+git config --global alias.ci   commit
+git config --global alias.st   status
+git config --global alias.sts  "status -s"
+git config --global alias.br   branch
+git config --global alias.re   remote
+git config --global alias.di   diff
+git config --global alias.type "cat-file -t"
+git config --global alias.dump "cat-file -p"
+git config --global alias.lo   "log --oneline"
+git config --global alias.ll "log --pretty=format:'%h %ad | %s%d [%Cgreen%an%Creset]' --graph --date=short"
+git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset %ad |%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset [%Cgreen%an%Creset]' --abbrev-commit --date=short"
 
 --------------------------------------------------------------------------------------------------------
 
