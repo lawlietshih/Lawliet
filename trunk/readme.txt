@@ -51,6 +51,9 @@ git status
 # On branch master
 nothing to commit (working directory clean)
 
+git checkout trunk/src/app/Makefile
+git checkout HEAD
+
 git pull origin master
 From https://github.com/lawlietshih/Lawliet
  * branch            master     -> FETCH_HEAD
