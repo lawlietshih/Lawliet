@@ -23,8 +23,7 @@ case $module in
 		make permit
 		;;
 	2)
-		source ./sync_version.sh
-		make clean_user_app
+		bash sync_version.sh
 		make firmware
 		;;
 	3)

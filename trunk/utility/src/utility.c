@@ -10,7 +10,7 @@ void Lawliet_Set_Flg(unsigned char a, unsigned char b)
 
 void Lawliet_Clear_Flg(unsigned char a, unsigned char b)
 {
-	if(FChk_Flg(a, b))
+	if(Chk_Flg(a, b))
 	{
 		Clr_Flg(a, b);
 	}

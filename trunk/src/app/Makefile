@@ -1,6 +1,8 @@
 EXEC_NAME:= lawliet
+LIBS_NAME:=
 BOA_EXEC_NAME:= boa
 PROJECT_SRC:=
+LIBS_SRC:=
 OBJS:=
 
 CROSS_COMPILE	:= 
@@ -21,6 +23,7 @@ STRIP		:= $(CROSS_COMPILE)strip
 PROJECT_ROOT:=$(shell pwd)
 RELEASE_DIR:=$(PROJECT_ROOT)/bin
 MODULES_DIR:=$(PROJECT_ROOT)/modules
+LIBS_DIR:=$(PROJECT_ROOT)/libs
 OBJECTS_DIR:=$(MODULES_DIR)/objs
 THIRD_DIR:=$(PROJECT_ROOT)/third
 BOA_DIR:=$(THIRD_DIR)/boa-0.94.13/src
@@ -31,7 +34,10 @@ BOA_WEB_DIR:=/var/www
 PROJECT_SRC+=$(PROJECT_ROOT)/main.c
 OBJS+=$(addprefix $(PROJECT_ROOT)/, $(addsuffix .o, $(basename $(notdir $(PROJECT_SRC)))))
 
-LDFLAGS:= -lpthread -lm
+LIBS_SRC+=$(LIBS_DIR)/libutility.so
+LIBS_NAME+=$(basename $(notdir $(LIBS_SRC)))
+
+LDFLAGS:= -lpthread -lm -l$(shell echo $(LIBS_NAME) | sed 's/lib//g')
 
 INCLUDE_DIR:=-I$(PROJECT_ROOT)/include/
 
@@ -51,7 +57,7 @@ third:
 	sudo cp -rf $(BOA_DIR)/web/* $(BOA_WEB_DIR)
 
 $(EXEC_NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o "$@" $(LDFLAGS)
+	$(CC) $(CFLAGS) $(OBJS) -L $(LIBS_DIR) $(LDFLAGS) -o "$@"
 	$(STRIP) $(EXEC_NAME)
 	mv $(EXEC_NAME) $(RELEASE_DIR)
 
