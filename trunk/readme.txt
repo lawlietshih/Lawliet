@@ -106,9 +106,9 @@ svn ci -m "commit msg"
 
 #gcc
 
-#shared library
+#shared library (.so)
 
-#static library
+#static library (.a)
 
 --------------------------------------------------------------------------------------------------------
 
