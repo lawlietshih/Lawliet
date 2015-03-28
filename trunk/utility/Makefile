@@ -1,3 +1,7 @@
+#ldd lawliet
+#echo "/home/lawliet/Lawliet/trunk/src/app/libs" >> /etc/ld.so.conf
+#ldconfig
+
 LIBS_NAME:= libutility.so
 OBJS_SRC:=
 
@@ -30,7 +34,7 @@ LDFLAGS:= -lpthread -lm
 
 INCLUDE_DIR:=-I$(OBJS_ROOT)/include/
 
-CFLAGS:= -g -Wall -O2 -Werror -Wunused-function -Wunused-label -Wunused-value -Wunused-variable
+CFLAGS:= -g -Wall -O2 -Werror -fPIC -Wunused-function -Wunused-label -Wunused-value -Wunused-variable
 CFLAGS+= $(INCLUDE_DIR)
 
 .PHONY:all clean

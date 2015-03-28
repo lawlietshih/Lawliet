@@ -21,6 +21,13 @@ gksudo gedit filename
 
 chown lawliet:lawliet *
 
+#./lawliet: error while loading shared libraries: libutility.so: cannot open 
+shared object file: No such file or directory
+
+>> ldd lawliet
+>> echo "/home/lawliet/Lawliet/trunk/src/app/libs" >> /etc/ld.so.conf
+>> ldconfig
+
 --------------------------------------------------------------------------------------------------------
 
 #git skill

@@ -58,7 +58,7 @@ third:
 	sudo cp -rf $(BOA_DIR)/web/* $(BOA_WEB_DIR)
 
 $(EXEC_NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -L $(LIBS_DIR) $(LDFLAGS) -o "$@"
+	$(CC) $(CFLAGS) $(OBJS) -L$(LIBS_DIR) $(LDFLAGS) -o "$@"
 	$(STRIP) $(EXEC_NAME)
 	mv $(EXEC_NAME) $(RELEASE_DIR)
 	#install -m 755 $(EXEC_NAME) $(RELEASE_DIR)

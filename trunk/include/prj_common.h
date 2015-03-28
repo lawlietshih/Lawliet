@@ -8,6 +8,9 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 
+#define CPU_BIG_ENDIAN 	  1
+#define CPU_LITTLE_ENDIAN 0
+
 #ifdef __cplusplus
 }
 #endif

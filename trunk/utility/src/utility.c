@@ -15,3 +15,15 @@ void Lawliet_Clear_Flg(unsigned char a, unsigned char b)
 		Clr_Flg(a, b);
 	}
 }
+
+int Lawliet_Check_CPUendian(void)
+{
+  union
+  {
+    unsigned int a;
+    unsigned char b; 
+  }c;
+  c.a = 0x1234;
+  return (c.b == 0x12) ? CPU_BIG_ENDIAN : CPU_LITTLE_ENDIAN;
+}
+

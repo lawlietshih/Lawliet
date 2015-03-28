@@ -11,4 +11,6 @@ void Lawliet_Set_Flg(unsigned char a, unsigned char b);
 
 void Lawliet_Clear_Flg(unsigned char a, unsigned char b);
 
+int Lawliet_Check_CPUendian(void);
+
 #endif /* _UTILITY_H_ */
