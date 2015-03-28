@@ -1,6 +1,6 @@
 #!/bin/sh
 
-module=1
+option=1
 
 echo
 echo    "********************************************************************************"
@@ -13,9 +13,9 @@ echo    "* 5. Execute Lawliet                                                   
 echo    "* 6. Killall -9 Process                                                         "
 echo    "********************************************************************************"
 echo -n "Please select the module to build: "
-read module
+read option
 
-case $module in
+case $option in
 	0)
 		make del
 		;;

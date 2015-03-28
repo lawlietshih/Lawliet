@@ -23,6 +23,8 @@ del:
 permit:
 	find -type d -exec chmod 755 {} \;
 	find -type f -exec chmod 755 {} \;
+	find -type d -exec chown lawliet:lawliet {} \;
+	find -type f -exec chown lawliet:lawliet {} \;
 
 third_party:
 	make -j6 -C $(APP_DIR) third_clean
