@@ -73,5 +73,5 @@ clean:
 	rm -rf $(RELEASE_DIR)/$(EXEC_NAME)
 
 kill_proc:
-	-killall -9 $(BOA_EXEC_NAME)
-	-killall -9 $(EXEC_NAME)
+	#-killall -9 $(BOA_EXEC_NAME)
+	-killall -12 $(EXEC_NAME)
