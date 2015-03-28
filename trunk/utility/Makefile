@@ -30,7 +30,7 @@ LDFLAGS:= -lpthread -lm
 
 INCLUDE_DIR:=-I$(OBJS_ROOT)/include/
 
-CFLAGS:= -g -Wall -O2 -Werror
+CFLAGS:= -g -Wall -O2 -Werror -Wunused-function -Wunused-label -Wunused-value -Wunused-variable
 CFLAGS+= $(INCLUDE_DIR)
 
 .PHONY:all clean
@@ -40,9 +40,11 @@ all: $(LIBS_NAME)
 $(LIBS_NAME):
 	$(CC) $(CFLAGS) -c $(UTILITY_SRC)
 	mv *.o $(OBJS_DIR)
+	#install -m 755 *.o $(OBJS_DIR)
 	$(CC) $(CFLAGS) -shared $(OBJS) -o "$@" $(LDFLAGS)
 	$(STRIP) $(LIBS_NAME)
 	mv $(LIBS_NAME) $(LIBS_DIR)
+	#install -m 755 $(LIBS_NAME) $(LIBS_DIR)
 
 clean:
 	rm -rf $(OBJS)

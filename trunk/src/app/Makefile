@@ -41,7 +41,7 @@ LDFLAGS:= -lpthread -lm -l$(shell echo $(LIBS_NAME) | sed 's/lib//g')
 
 INCLUDE_DIR:=-I$(PROJECT_ROOT)/include/
 
-CFLAGS:= -g -Wall -O2 -Werror
+CFLAGS:= -g -Wall -O2 -Werror -Wunused-function -Wunused-label -Wunused-value -Wunused-variable
 CFLAGS+= $(INCLUDE_DIR)
 
 .PHONY:all third clean kill_proc
@@ -51,6 +51,7 @@ all: $(EXEC_NAME)
 third:
 	make -j6 -C $(BOA_DIR)
 	mv $(BOA_EXE) $(RELEASE_DIR)
+	#install -m 755 $(BOA_EXE) $(RELEASE_DIR)
 	sudo mkdir -p $(BOA_CONFIG_DIR)
 	sudo mkdir -p $(BOA_WEB_DIR)
 	sudo cp -rf $(BOA_DIR)/../boa.conf $(BOA_CONFIG_DIR)
@@ -60,6 +61,7 @@ $(EXEC_NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -L $(LIBS_DIR) $(LDFLAGS) -o "$@"
 	$(STRIP) $(EXEC_NAME)
 	mv $(EXEC_NAME) $(RELEASE_DIR)
+	#install -m 755 $(EXEC_NAME) $(RELEASE_DIR)
 
 third_clean:
 	rm -rf $(BOA_DIR)/*.o
