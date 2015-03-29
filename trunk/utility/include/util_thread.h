@@ -67,5 +67,4 @@ void thread_setname(thread_t *thread, char *name);
 }
 #endif
 
-#endif /* __UTIL_THREAD_H_ */
-
+#endif /* _UTIL_THREAD_H_ */

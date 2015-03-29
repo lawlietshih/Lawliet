@@ -1,5 +1,5 @@
-#ifndef __PRJ_TYPES_H_
-#define __PRJ_TYPES_H_
+#ifndef _PRJ_TYPES_H_
+#define _PRJ_TYPES_H_
 
 #include <inttypes.h> /* Portable for 64bit */
 #include <stdbool.h>
@@ -29,5 +29,5 @@ typedef pthread_attr_t	PTHREADATTR;
 }
 #endif
 
-#endif /* __PRJ_TYPES_H_ */
+#endif /* _PRJ_TYPES_H_ */
 

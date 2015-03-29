@@ -1,5 +1,5 @@
-#ifndef __PRJ_ERRNO_H_
-#define __PRJ_ERRNO_H_
+#ifndef _PRJ_ERRNO_H_
+#define _PRJ_ERRNO_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,5 +18,5 @@ typedef int PRJResult;
 }
 #endif
 
-#endif /* __PRJ_ERRNO_H_ */
+#endif /* _PRJ_ERRNO_H_ */
 
