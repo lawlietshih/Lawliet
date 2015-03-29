@@ -23,6 +23,7 @@ STRIP		:= $(CROSS_COMPILE)strip
 UTILITY_ROOT:=$(shell pwd)
 
 UTILITY_SRC+=$(UTILITY_ROOT)/src/utility.c
+UTILITY_SRC+=$(UTILITY_ROOT)/src/util_thread.c
 
 OBJS_DIR:=$(UTILITY_ROOT)/objs
 OBJS:=$(OBJS_DIR)/*
@@ -33,6 +34,7 @@ LIBS_DIR:=$(APP_DIR)/libs
 LDFLAGS:= -lpthread -lm
 
 INCLUDE_DIR:=-I$(OBJS_ROOT)/include/
+INCLUDE_DIR+=-I../../include/
 
 CFLAGS:= -g -Wall -O2 -Werror -fPIC -Wunused-function -Wunused-label -Wunused-value -Wunused-variable
 CFLAGS+= $(INCLUDE_DIR)

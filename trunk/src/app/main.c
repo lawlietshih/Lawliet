@@ -1,3 +1,13 @@
+/*
+	File name	:main.c
+	Brief		:Core Task (System Init & System Control)
+	Project		:Lawliet
+	Author		:Lawliet
+	History		:
+    ---------------------------------------------------------------------------
+     C0001 - Created by Lawliet 									2015-03-07
+*/
+
 #include <signal.h>
 #include <unistd.h>
 
@@ -51,6 +61,8 @@ int main(int argc, char *argv[])
 	}else{
 		LDBG("CPU Endian : Error !\n");
 	}
+
+	//---------------------------------------------------------------------------
 	
 	while(lawliet_run){
 		LDBG("live... !\n");
