@@ -6,25 +6,26 @@ LIBS_SRC:=
 OBJS:=
 
 CROSS_COMPILE	:= 
-AS		:= $(CROSS_COMPILE)as
-AR		:= $(CROSS_COMPILE)ar
-CC		:= $(CROSS_COMPILE)gcc
-CPP		:= $(CC) -E
-LD		:= $(CROSS_COMPILE)ld
-NM		:= $(CROSS_COMPILE)nm
-OBJCOPY		:= $(CROSS_COMPILE)objcopy
-OBJDUMP 	:= $(CROSS_COMPILE)objdump
-RANLIB		:= $(CROSS_COMPILE)ranlib
-READELF		:= $(CROSS_COMPILE)readelf
-SIZE		:= $(CROSS_COMPILE)size
-STRINGS 	:= $(CROSS_COMPILE)strings
-STRIP		:= $(CROSS_COMPILE)strip
+AS				:= $(CROSS_COMPILE)as
+AR				:= $(CROSS_COMPILE)ar
+CC				:= $(CROSS_COMPILE)gcc
+CPP				:= $(CC) -E
+LD				:= $(CROSS_COMPILE)ld
+NM				:= $(CROSS_COMPILE)nm
+OBJCOPY			:= $(CROSS_COMPILE)objcopy
+OBJDUMP 		:= $(CROSS_COMPILE)objdump
+RANLIB			:= $(CROSS_COMPILE)ranlib
+READELF			:= $(CROSS_COMPILE)readelf
+SIZE			:= $(CROSS_COMPILE)size
+STRINGS 		:= $(CROSS_COMPILE)strings
+STRIP			:= $(CROSS_COMPILE)strip
 
 PROJECT_ROOT:=$(shell pwd)
 RELEASE_DIR:=$(PROJECT_ROOT)/bin
 MODULES_DIR:=$(PROJECT_ROOT)/modules
 LIBS_DIR:=$(PROJECT_ROOT)/libs
 OBJECTS_DIR:=$(MODULES_DIR)/objs
+MODULES_OBJS:=$(OBJECTS_DIR)/*.o
 THIRD_DIR:=$(PROJECT_ROOT)/third
 BOA_DIR:=$(THIRD_DIR)/boa-0.94.13/src
 BOA_EXE:=$(BOA_DIR)/$(BOA_EXEC_NAME)
@@ -44,7 +45,7 @@ INCLUDE_DIR:=-I$(PROJECT_ROOT)/include/
 CFLAGS:= -g -Wall -O2 -Werror -Wunused-function -Wunused-label -Wunused-value -Wunused-variable
 CFLAGS+= $(INCLUDE_DIR)
 
-.PHONY:all third clean kill_proc
+.PHONY:all modules modules_clean third third_clean clean kill_proc
 
 all: $(EXEC_NAME)
 
@@ -58,10 +59,19 @@ third:
 	sudo cp -rf $(BOA_DIR)/web/* $(BOA_WEB_DIR)
 
 $(EXEC_NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -L$(LIBS_DIR) $(LDFLAGS) -o "$@"
+	make -j6 -C modules
+	cd $(PROJECT_ROOT)
+	$(CC) $(CFLAGS) $(OBJS) $(MODULES_OBJS) -L$(LIBS_DIR) $(LDFLAGS) -o "$@"
 	$(STRIP) $(EXEC_NAME)
 	mv $(EXEC_NAME) $(RELEASE_DIR)
 	#install -m 755 $(EXEC_NAME) $(RELEASE_DIR)
+
+modules:
+	make -j6 -C $(MODULES_DIR) clean
+	make -j6 -C $(MODULES_DIR) sys_server
+
+modules_clean:
+	make -j6 -C $(MODULES_DIR) clean
 
 third_clean:
 	rm -rf $(BOA_DIR)/*.o

@@ -5,8 +5,17 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "../../../include/prj_common.h"
+#include "../../../utility/include/util_thread.h"
+
+void *SysSrvThread(void *p);
+
+void Init_System_Server(void);
+void Destroy_System_Server(void);
+
+void Lawliet_APP_Start(void);
+void Lawliet_APP_Stop(void);
+
 
 #ifdef __cplusplus
 }

@@ -23,7 +23,7 @@ typedef	float			FLOAT;
 typedef double			DOUBLE;
 typedef void			VOID;
 typedef pthread_t		PTHREAD;
-typedef pthread_attr_t		PTHREADATTR;
+typedef pthread_attr_t	PTHREADATTR;
 
 #ifdef __cplusplus
 }

@@ -13,11 +13,14 @@
 
 #include "../../include/prj_common.h"
 #include "../../utility/include/utility.h"
+#include "include/app_common.h"
 
 int lawliet_run = 1;
 
 void ShutdownLawlietSystem(int signo)
 {
+	Lawliet_APP_Stop();
+	sleep(5);
  	lawliet_run = 0;
 }
 
@@ -31,6 +34,16 @@ int LinuxSignalInitial(void)
  	}
 
 	return ret;
+}
+
+void Lawliet_APP_Start(void)
+{
+	Init_System_Server();
+}
+
+void Lawliet_APP_Stop(void)
+{
+	Destroy_System_Server();
 }
 
 int main(int argc, char *argv[])
@@ -62,13 +75,15 @@ int main(int argc, char *argv[])
 		LDBG("CPU Endian : Error !\n");
 	}
 
-	//---------------------------------------------------------------------------
+	Lawliet_APP_Start();
+	
+	//-----------------------------------------------------------------------------------
 	
 	while(lawliet_run){
-		LDBG("live... !\n");
+		LDBG("Lawliet Core Task live... !\n");
 		sleep(10);
 	}
-
+	
 	LDBG("Lawliet Core Task 881... !\n");
 	return 0;
 }

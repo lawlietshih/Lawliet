@@ -1,10 +1,9 @@
-#ifndef __UTIL_THREAD_H_
-#define __UTIL_THREAD_H_
+#ifndef _UTIL_THREAD_H_
+#define _UTIL_THREAD_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 #include <inttypes.h> /* Portable for 64bit */
 #include <stdbool.h>
@@ -13,6 +12,7 @@ extern "C" {
 
 #define PTHREAD_ATTR_INIT(a) 			 pthread_attr_init(a)
 #define PTHREAD_ATTR_SETDETACHSTATE(a,s) pthread_attr_setdetachstate(a,s)
+#define PTHREAD_ATTR_DESTROY(a)			 pthread_attr_destroy(a)
 #define PTHREAD_MUTEX_TRYLOCK(m)		 pthread_mutex_trylock(m)
 #define PTHREAD_MUTEX_LOCK(m)			 pthread_mutex_lock(m)
 #define PTHREAD_MUTEX_UNLOCK(m)			 pthread_mutex_unlock(m)

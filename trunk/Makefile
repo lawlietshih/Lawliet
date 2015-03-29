@@ -3,6 +3,7 @@
 TOP_DIR=$(PWD)
 SRC=$(TOP_DIR)/src
 APP_DIR=$(SRC)/app
+MODULES_DIR=$(APP_DIR)/modules
 UTI_DIR=$(TOP_DIR)/utility
 OUT_DIR=$(TOP_DIR)/out
 RELEASE_DIR=$(OUT_DIR)/release
@@ -63,6 +64,7 @@ clean_user_app:
 
 clean: clean_utility_libs clean_user_app
 	make -j6 -C $(APP_DIR) third_clean
+	make -j6 -C $(MODULES_DIR) clean
 	rm -rf $(RELEASE_DIR)/*.laf
 	cd $(TOP_DIR)
 	echo "clean all"
