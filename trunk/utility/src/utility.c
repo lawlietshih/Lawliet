@@ -1,4 +1,67 @@
+#include <errno.h>
 #include "../include/utility.h"
+
+int readn(int fd, void *vptr, int n)
+{
+	int nleft;
+	int nread;
+	char *ptr;
+
+	ptr = vptr;
+	nleft = n;
+
+	while(nleft>0)
+	{
+		if ((nread = read(fd, ptr, nleft)) < 0)
+		{
+			if (errno == EINTR)
+				nread = 0;
+			else
+				return (-1);
+			/*
+			if(errno == EINTER){
+
+			}else if(errno == EAGAIN){
+
+			}
+			*/
+		}
+		else if (nread == 0)
+			break;
+
+		nleft -= nread;
+		ptr += nread;
+	}
+
+	return (n - nleft);
+}
+
+int writen(int fd, const void *vptr, int n)
+
+{
+	int nleft;
+	int nwritten;
+	const char *ptr;
+
+	ptr = vptr;
+	nleft = n;
+
+	while (nleft > 0)
+	{
+		if ((nwritten = write(fd, ptr, nleft)) <= 0)
+		{
+			if (errno == EINTR)
+				nwritten = 0;
+			else
+				return (-1);
+		}
+
+		nleft -= nwritten;
+		ptr += nwritten;
+	}
+
+	return n;
+}
 
 void Lawliet_Set_Flg(unsigned char a, unsigned char b)
 {

@@ -132,13 +132,14 @@ extern "C" {
 #define CPU_LITTLE_ENDIAN 0
 
 #define LAWLIET_DEBUG	  1
-#define LDBG(fmt, ...) do { \
+
+#define LDBG(fmt...) do { \
 	if(LAWLIET_DEBUG){ \
 		fprintf(stderr,"[ Lawliet ]\t" fmt); \
 	} \
 }while(0)
 
-#if 0		
+#if 0
 do { if (LAWLIET_DEBUG)	fprintf(stderr, "[ Lawliet ]\t[%s:%d,%s]\t" fmt, __BASE_FILE__, __LINE__, \
                         (DBG_LEVEL)?__func__:"\b", ##__VA_ARGS__); } while (0)
 #endif

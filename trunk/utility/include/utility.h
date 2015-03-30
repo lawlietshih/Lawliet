@@ -7,9 +7,16 @@ extern "C" {
 
 #include "../../include/prj_common.h"
 
+#define _SAFE_FREE(p)			do { if(p)	{free(p);   p = NULL;} } while(0)
+#define _SAFE_FCLOSE(p)			do { if(p)	{fclose(p); p = NULL;} } while(0)
+#define _SAFE_CLOSE(p)			do { if(p>0){close(p);  p = -1;}   } while(0)
+
 #define Chk_Flg(a, b) ((a) & (1 << b))
 #define Set_Flg(a, b) ((a) |= (1 << b))
 #define Clr_Flg(a, b) ((a) &= (~(1 << b)))
+
+int readn(int fd, void *vptr, int n);
+int writen(int fd, const void *vptr, int n);
 
 void Lawliet_Set_Flg(unsigned char a, unsigned char b);
 

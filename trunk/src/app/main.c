@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 	}else{
 		LDBG("CPU Endian : Error !\n");
 	}
-
+	
 	Lawliet_APP_Start();
 	
 	//-----------------------------------------------------------------------------------
