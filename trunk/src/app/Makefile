@@ -84,4 +84,4 @@ clean:
 
 kill_proc:
 	#-killall -9 $(BOA_EXEC_NAME)
-	-killall -12 $(EXEC_NAME)
+	-sudo killall -12 $(EXEC_NAME)

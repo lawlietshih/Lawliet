@@ -190,14 +190,28 @@ void *SysSrvThread(void *p)
 		//LDBG("n : %d\n", n);//n == 1
 		
 		for (i=0; i<n; i++){
+			
+			LDBG("events[%d].data.fd : %d\n", i, events[i].data.fd);
+			LDBG("events[%d].events  : %d\n", i, events[i].events);
+
+			LDBG("EPOLLIN      : %d\n", EPOLLIN);
+			LDBG("EPOLLPRI     : %d\n", EPOLLPRI);
+			LDBG("EPOLLOUT     : %d\n", EPOLLOUT);
+			//LDBG("EPOLLRDHUP   : %d\n", EPOLLRDHUP);//Linux 2.6.17
+			LDBG("EPOLLERR     : %d\n", EPOLLERR);
+			LDBG("EPOLLHUP     : %d\n", EPOLLHUP);
+			//LDBG("EPOLLET      : %d\n", EPOLLET);//
+			//LDBG("EPOLLONESHOT : %d\n", EPOLLONESHOT);//Linux 2.6.2
+			//LDBG("EPOLLWAKEUP  : %d\n", EPOLLWAKEUP);//Linux 3.5
+			
 			if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP) || (!(events[i].events & EPOLLIN))){
 				LDBG ("SysSrvEpoll error\n");
-          		_SAFE_CLOSE (events[i].data.fd);
-          		continue;
+          			_SAFE_CLOSE (events[i].data.fd);
+          			continue;
 			}else if(SysSrvSocket == events[i].data.fd){
-                client_len = sizeof(client_addr);
+                		client_len = sizeof(client_addr);
 				/* TCP socket : accept */
-                ClientSocket = accept(SysSrvSocket, &client_addr, &client_len);
+                		ClientSocket = accept(SysSrvSocket, &client_addr, &client_len);
 				//LDBG("ClientSocket : %d\n", ClientSocket);
 				  
 				if(ClientSocket < 0)
@@ -226,7 +240,9 @@ void *SysSrvThread(void *p)
 				if(epoll_ctl(SysSrvEpoll, EPOLL_CTL_ADD, ClientSocket, &event) == -1){
 					LDBG("SysSrvEpoll control failed\r\n");
 				}
-			}else if(events[i].events & EPOLLIN){
+			}
+
+			if(events[i].events & EPOLLIN){
 				LDBG("Epoll Event : EPOLLIN !\n");
 			}else if(events[i].events & EPOLLOUT){
 				LDBG("Epoll Event : EPOLLOUT !\n");
