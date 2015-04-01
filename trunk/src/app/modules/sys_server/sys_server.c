@@ -61,13 +61,13 @@ void Destroy_System_Server(void)
 		_SAFE_CLOSE(net_server_socket);
 		return;
 	}
-
+/*
 	if (setsockopt(net_server_socket, SOL_SOCKET, SO_REUSEPORT, (char*)&one, sizeof(one)) == -1){
 		LDBG("setsockopt error!\r\n");
 		_SAFE_CLOSE(net_server_socket);
 		return;
 	}
-
+*/
 	bzero(&server_addr,sizeof(server_addr));
  	server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(SYS_SERVER_PORT);
@@ -116,14 +116,14 @@ void *SysSrvThread(void *p)
 		//print_errno();
 		return NULL;
 	}
-
+/*
 	if(setsockopt(SysSrvSocket, SOL_SOCKET, SO_REUSEPORT, (char*)&on, sizeof(on)) == -1){
 		LDBG("setsockopt error!\r\n");
 		_SAFE_CLOSE(SysSrvSocket);
 		//print_errno();
 		return NULL;
 	}
-
+*/
 	so_linger.l_onoff = 1;
 	so_linger.l_linger = 0;
 	timeout.tv_sec = 10;
