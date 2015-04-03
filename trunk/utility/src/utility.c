@@ -103,6 +103,19 @@ void Lawliet_Clear_Flg(unsigned char a, unsigned char b)
 
 int Lawliet_Check_CPUendian(void)
 {
+  /*
+  	@Network byte order : Big Endian
+  	
+  	htons() : host to network short
+	htonl() : host to network long
+	ntohs() : network to host short
+	ntohl() : network to host long
+
+	uint32_t htonl(uint32_t hostlong);
+	uint16_t htons(uint16_t hostshort);
+	uint32_t ntohl(uint32_t netlong);
+	uint16_t ntohs(uint16_t netshort);
+  */
   union
   {
     unsigned int a;

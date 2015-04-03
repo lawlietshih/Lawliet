@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 	}
 	*/
 
+	/* Host byte order */
 	cpu_endian = Lawliet_Check_CPUendian();
 
 	if(cpu_endian == CPU_BIG_ENDIAN){
