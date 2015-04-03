@@ -12,6 +12,9 @@ extern "C" {
 #define MAX_CFG_SERVER_LISTEN_QUEUE 1
 #define MAXEVENTS 64
 
+#define SERVER_TIMEOUT 1000//ms
+#define SYSSRV_TIMEOUT SERVER_TIMEOUT
+
 void *SysSrvThread(void *p);
 
 void Init_System_Server(void);

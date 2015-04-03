@@ -184,68 +184,79 @@ void *SysSrvThread(void *p)
 	
 	while(syssrv_run){
 		int n, i;
- 		LDBG("sys_server epoll_wait... !\n");
-      	n = epoll_wait(SysSrvEpoll, events, MAXEVENTS, -1);
+ 		//LDBG("sys_server epoll_wait... !\n");
+      	//n = epoll_wait(SysSrvEpoll, events, MAXEVENTS, -1);
 		//LDBG("n : %d\n", n);//n == 1
-		
-		for (i=0; i<n; i++){
-			
-			LDBG("events[%d].data.fd : %d\n", i, events[i].data.fd);
-			LDBG("events[%d].events  : %d\n", i, events[i].events);
 
-			LDBG("EPOLLIN      : %d\n", EPOLLIN);// 1
-			LDBG("EPOLLPRI     : %d\n", EPOLLPRI);// 2
-			LDBG("EPOLLOUT     : %d\n", EPOLLOUT);// 4
-			//LDBG("EPOLLRDHUP   : %d\n", EPOLLRDHUP);//Linux 2.6.17
-			LDBG("EPOLLERR     : %d\n", EPOLLERR);// 8
-			LDBG("EPOLLHUP     : %d\n", EPOLLHUP);// 16
-			//LDBG("EPOLLET      : %d\n", EPOLLET);//
-			//LDBG("EPOLLONESHOT : %d\n", EPOLLONESHOT);//Linux 2.6.2
-			//LDBG("EPOLLWAKEUP  : %d\n", EPOLLWAKEUP);//Linux 3.5
+		switch(n = epoll_wait(SysSrvEpoll, events, MAXEVENTS, SYSSRV_TIMEOUT))//tiomout : ms
+		{
+			case -1:
+				LDBG("sys_server epoll_wait...error !\n");
+				break;
+			case  0:
+				LDBG("sys_server epoll_wait...tiomeout : %d s !\n", (SYSSRV_TIMEOUT/1000));
+				break;
+			default:
+				for (i=0; i<n; i++){
 			
-			if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP) || (!(events[i].events & EPOLLIN))){
-				LDBG ("SysSrvEpoll error\n");
-          			_SAFE_CLOSE (events[i].data.fd);
-          			continue;
-			}else if(SysSrvSocket == events[i].data.fd){
+					LDBG("events[%d].data.fd : %d\n", i, events[i].data.fd);
+					LDBG("events[%d].events  : %d\n", i, events[i].events);
+
+					LDBG("EPOLLIN      : %d\n", EPOLLIN);// 1
+					LDBG("EPOLLPRI     : %d\n", EPOLLPRI);// 2
+					LDBG("EPOLLOUT     : %d\n", EPOLLOUT);// 4
+					//LDBG("EPOLLRDHUP   : %d\n", EPOLLRDHUP);//Linux 2.6.17
+					LDBG("EPOLLERR     : %d\n", EPOLLERR);// 8
+					LDBG("EPOLLHUP     : %d\n", EPOLLHUP);// 16
+					//LDBG("EPOLLET      : %d\n", EPOLLET);//
+					//LDBG("EPOLLONESHOT : %d\n", EPOLLONESHOT);//Linux 2.6.2
+					//LDBG("EPOLLWAKEUP  : %d\n", EPOLLWAKEUP);//Linux 3.5
+			
+					if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP) || (!(events[i].events & EPOLLIN))){
+						LDBG ("SysSrvEpoll error\n");
+          				_SAFE_CLOSE (events[i].data.fd);
+          				continue;
+					}else if(SysSrvSocket == events[i].data.fd){
                 		client_len = sizeof(client_addr);
-				/* TCP socket : accept */
+						/* TCP socket : accept */
                 		ClientSocket = accept(SysSrvSocket, &client_addr, &client_len);
-				//LDBG("ClientSocket : %d\n", ClientSocket);
+						//LDBG("ClientSocket : %d\n", ClientSocket);
 				  
-				if(ClientSocket < 0)
-				{
-					LDBG("ClientSocket accept failed !\n");
-					break;
+						if(ClientSocket < 0)
+						{
+							LDBG("ClientSocket accept failed !\n");
+							break;
+						}
+
+						LDBG("sys_server accept a client : success !\n");
+
+						/* client socket mode */
+						if((flags = fcntl(ClientSocket, F_GETFL, 0)) == -1){
+							LDBG("fcntl F_GETFL error!!\r\n");
+						}
+
+						flags |= O_NONBLOCK;//non-blocking
+
+						if((fcntl(ClientSocket, F_SETFL, flags)) == -1){
+							LDBG("fcntl F_SETFL error!!\r\n");
+						}
+
+						/* epoll or select */
+						event.data.fd = ClientSocket;
+  						event.events = EPOLLIN | EPOLLET;
+
+						if(epoll_ctl(SysSrvEpoll, EPOLL_CTL_ADD, ClientSocket, &event) == -1){
+							LDBG("SysSrvEpoll control failed\r\n");
+						}
+					}
+
+					if(events[i].events & EPOLLIN){
+						LDBG("Epoll Event : EPOLLIN !\n");
+					}else if(events[i].events & EPOLLOUT){
+						LDBG("Epoll Event : EPOLLOUT !\n");
+					}
 				}
-
-				LDBG("sys_server accept a client : success !\n");
-
-				/* client socket mode */
-				if((flags = fcntl(ClientSocket, F_GETFL, 0)) == -1){
-					LDBG("fcntl F_GETFL error!!\r\n");
-				}
-
-				flags |= O_NONBLOCK;//non-blocking
-
-				if((fcntl(ClientSocket, F_SETFL, flags)) == -1){
-					LDBG("fcntl F_SETFL error!!\r\n");
-				}
-
-				/* epoll or select */
-				event.data.fd = ClientSocket;
-  				event.events = EPOLLIN | EPOLLET;
-
-				if(epoll_ctl(SysSrvEpoll, EPOLL_CTL_ADD, ClientSocket, &event) == -1){
-					LDBG("SysSrvEpoll control failed\r\n");
-				}
-			}
-
-			if(events[i].events & EPOLLIN){
-				LDBG("Epoll Event : EPOLLIN !\n");
-			}else if(events[i].events & EPOLLOUT){
-				LDBG("Epoll Event : EPOLLOUT !\n");
-			}
+				break;
 		}
 		
 		LDBG("sys_server live... !\n");
