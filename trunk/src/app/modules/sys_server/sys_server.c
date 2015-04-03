@@ -101,6 +101,8 @@ void *SysSrvThread(void *p)
 	struct sockaddr client_addr;
     socklen_t client_len;
     int ClientSocket = -1;
+
+	char packetBuffer[segSize];
 	
 	/* TCP socket : create */
 	if((SysSrvSocket = socket(AF_INET, SOCK_STREAM, 0)) == -1){
@@ -197,6 +199,9 @@ void *SysSrvThread(void *p)
 				LDBG("sys_server epoll_wait...tiomeout : %d s !\n", (SYSSRV_TIMEOUT/1000));
 				break;
 			default:
+
+				memset(packetBuffer, 0, segSize);
+				
 				for (i=0; i<n; i++){
 			
 					LDBG("events[%d].data.fd : %d\n", i, events[i].data.fd);
@@ -252,6 +257,8 @@ void *SysSrvThread(void *p)
 
 					if(events[i].events & EPOLLIN){
 						LDBG("Epoll Event : EPOLLIN !\n");
+						readn(ClientSocket, packetBuffer, segSize);
+						LDBG("CMD : %s\n", packetBuffer);
 					}else if(events[i].events & EPOLLOUT){
 						LDBG("Epoll Event : EPOLLOUT !\n");
 					}
