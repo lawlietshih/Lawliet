@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 	for(i = 0; i < 140; ++i)
 	{
 		errno = i;
-		print_errno(i);
+		print_errno(errno);
 	}
 	return 0;
 }
