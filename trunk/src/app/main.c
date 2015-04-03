@@ -48,10 +48,11 @@ void Lawliet_APP_Stop(void)
 
 int main(int argc, char *argv[])
 {
+	int i = 0;
 	int cpu_endian = -1;
-	LDBG("====================================\n");
-	LDBG("   Project Lawliet : Start Sucess\n");
-	LDBG("====================================\n");
+	LDBG("=====================================\n");
+	LDBG("   Project Lawliet : Start Success\n");
+	LDBG("=====================================\n");
 
 	if(LinuxSignalInitial() != 0){
 		 LDBG("Linux Signal : register failed!\n");
@@ -85,5 +86,15 @@ int main(int argc, char *argv[])
 	}
 	
 	LDBG("Lawliet Core Task 881... !\n");
+
+	LDBG("=====================================\n");
+	LDBG("   Project Lawliet : Stop  Success\n");
+	LDBG("=====================================\n");
+
+	for(i = 0; i < 140; ++i)
+	{
+		errno = i;
+		print_errno(i);
+	}
 	return 0;
 }

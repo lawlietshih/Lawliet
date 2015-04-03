@@ -1,14 +1,14 @@
 #ifndef _UTIL_THREAD_H_
 #define _UTIL_THREAD_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <inttypes.h> /* Portable for 64bit */
 #include <stdbool.h>
 #include <pthread.h>
 #include "../../include/prj_errno.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define PTHREAD_ATTR_INIT(a) 			 pthread_attr_init(a)
 #define PTHREAD_ATTR_SETDETACHSTATE(a,s) pthread_attr_setdetachstate(a,s)

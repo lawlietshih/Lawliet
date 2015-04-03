@@ -1,4 +1,3 @@
-#include <errno.h>
 #include "../include/utility.h"
 
 int readn(int fd, void *vptr, int n)
@@ -61,6 +60,29 @@ int writen(int fd, const void *vptr, int n)
 	}
 
 	return n;
+}
+
+void print_errno(int err_no){
+
+	switch(err_no)
+	{
+		case EAGAIN://non-blocking
+			/* Resource temporarily unavailable */
+			LDBG("EAGAIN\n");
+			break;
+		//case EWOULDBLOCK://non-blocking
+			/* Operation would block */
+		//	LDBG("EWOULDBLOCK\t");
+		//	break;
+		case EINTR:
+			/* Interrupted system call */
+			LDBG("EINTR\n");
+			break;
+		default :
+			break;
+	}
+
+	LDBG("errno %d :\t%s\n", err_no, strerror(err_no));
 }
 
 void Lawliet_Set_Flg(unsigned char a, unsigned char b)

@@ -6,7 +6,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <errno.h>
 #include <signal.h>
 #include <sys/time.h>
 #include <sys/resource.h>
@@ -194,12 +193,12 @@ void *SysSrvThread(void *p)
 			LDBG("events[%d].data.fd : %d\n", i, events[i].data.fd);
 			LDBG("events[%d].events  : %d\n", i, events[i].events);
 
-			LDBG("EPOLLIN      : %d\n", EPOLLIN);
-			LDBG("EPOLLPRI     : %d\n", EPOLLPRI);
-			LDBG("EPOLLOUT     : %d\n", EPOLLOUT);
+			LDBG("EPOLLIN      : %d\n", EPOLLIN);// 1
+			LDBG("EPOLLPRI     : %d\n", EPOLLPRI);// 2
+			LDBG("EPOLLOUT     : %d\n", EPOLLOUT);// 4
 			//LDBG("EPOLLRDHUP   : %d\n", EPOLLRDHUP);//Linux 2.6.17
-			LDBG("EPOLLERR     : %d\n", EPOLLERR);
-			LDBG("EPOLLHUP     : %d\n", EPOLLHUP);
+			LDBG("EPOLLERR     : %d\n", EPOLLERR);// 8
+			LDBG("EPOLLHUP     : %d\n", EPOLLHUP);// 16
 			//LDBG("EPOLLET      : %d\n", EPOLLET);//
 			//LDBG("EPOLLONESHOT : %d\n", EPOLLONESHOT);//Linux 2.6.2
 			//LDBG("EPOLLWAKEUP  : %d\n", EPOLLWAKEUP);//Linux 3.5
