@@ -167,7 +167,7 @@ void *SysSrvThread(void *p)
 
 	/* server address */
 	memset(&server_addr, 0, sizeof(server_addr));
-	server_addr.sin_family = AF_INET ;
+	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);//inet_addr(MEDIA_SERVER_IP)
 	server_addr.sin_port = htons(SYS_SERVER_PORT);
 

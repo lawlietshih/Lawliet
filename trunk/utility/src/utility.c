@@ -1,5 +1,31 @@
 #include "../include/utility.h"
 
+/*
+	@socket
+
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	int socket(int domain, int type, int protocol);
+
+	@param
+	
+	domain -> AF_xx : Address  Family
+		   -> PF_xx : Protocol Family
+
+	type            : Socket   Type
+	protocol        : Protocol Type
+
+	---------------------------------------------------------------------
+
+	AF_INET + SOCK_STREAM : TCP
+	AF_INET + SOCK_DGRAM  : UDP
+
+	@RAW socket
+	send : AF_INET + SOCK_RAW + IPPROTO_ICMP (Layer 3 : IP       Layer)
+	send : PF_PACKET/AF_PACKET + SOCK_RAW    (Layer 2 : Ethernet Layer)
+	recv : AF_INET + SOCK_RAW
+*/
+
 int readn(int fd, void *vptr, int n)
 {
 	int nleft;
