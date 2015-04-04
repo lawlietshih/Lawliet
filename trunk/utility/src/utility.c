@@ -9,37 +9,37 @@ int readn(int fd, void *vptr, int n)
 	ptr = vptr;
 	nleft = n;
 
-	while(nleft>0)
+	while(nleft > 0)
 	{
-		LDBG("readn nleft: %d\n", nleft);
+		LDBG("#readn nleft: %d\n", nleft);
 		
-		if ((nread = read(fd, ptr, nleft)) < 0)
+		if((nread = read(fd, ptr, nleft)) < 0)
 		{
-			if (errno == EINTR){
-				nread = 0;
-				print_errno(errno);
-			}else{
-				print_errno(errno);
-				return (-1);
+			switch(errno)
+			{
+				case EAGAIN:// non-blocking : EWOULDBLOCK
+				case EINTR:
+					/* retry */
+					nread = 0;
+					print_errno(errno);
+					break;
+				default :
+					/* error */
+					print_errno(errno);
+					return (-1);
 			}
-			/*
-			if(errno == EINTER){
-
-			}else if(errno == EAGAIN){
-
-			}
-			*/
-		}
-		else if (nread == 0)
+		}else if(nread == 0){
+			/* end of buffer */
 			break;
+		}
 
-		LDBG("readn nread: %d\n", nread);
+		LDBG("#readn nread: %d\n", nread);
 		
 		nleft -= nread;
 		ptr += nread;
 	}
 
-	LDBG("readn (n - nleft): %d\n", (n - nleft));
+	LDBG("#readn (n - nleft): %d\n", (n - nleft));
 	return (n - nleft);
 }
 
@@ -53,20 +53,35 @@ int writen(int fd, const void *vptr, int n)
 	ptr = vptr;
 	nleft = n;
 
-	while (nleft > 0)
+	while(nleft > 0)
 	{
-		if ((nwritten = write(fd, ptr, nleft)) <= 0)
+		LDBG("#writen nleft: %d\n", nleft);
+		
+		if((nwritten = write(fd, ptr, nleft)) <= 0)
 		{
-			if (errno == EINTR)
-				nwritten = 0;
-			else
-				return (-1);
+			switch(errno)
+			{
+				case EAGAIN:// non-blocking : EWOULDBLOCK
+				case EINTR:
+					/* retry */
+					nwritten = 0;
+					print_errno(errno);
+					break;
+				default :
+					/* error */
+					print_errno(errno);
+					return (-1);
+			}
 		}
 
+		LDBG("#writen nwritten: %d\n", nwritten);
+		
 		nleft -= nwritten;
 		ptr += nwritten;
 	}
 
+	LDBG("#writen n: %d\n", n);
+	
 	return n;
 }
 
