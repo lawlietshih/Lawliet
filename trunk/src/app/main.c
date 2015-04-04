@@ -48,7 +48,7 @@ void Lawliet_APP_Stop(void)
 
 int main(int argc, char *argv[])
 {
-	int i = 0;
+	//int i = 0;
 	int cpu_endian = -1;
 	LDBG("=====================================\n");
 	LDBG("   Project Lawliet : Start Success\n");
@@ -91,11 +91,12 @@ int main(int argc, char *argv[])
 	LDBG("=====================================\n");
 	LDBG("   Project Lawliet : Stop  Success\n");
 	LDBG("=====================================\n");
-
+#if 0
 	for(i = 0; i < 140; ++i)
 	{
 		errno = i;
 		print_errno(errno);
 	}
+#endif
 	return 0;
 }

@@ -11,12 +11,17 @@ int readn(int fd, void *vptr, int n)
 
 	while(nleft>0)
 	{
+		LDBG("readn nleft: %d\n", nleft);
+		
 		if ((nread = read(fd, ptr, nleft)) < 0)
 		{
-			if (errno == EINTR)
+			if (errno == EINTR){
 				nread = 0;
-			else
+				print_errno(errno);
+			}else{
+				print_errno(errno);
 				return (-1);
+			}
 			/*
 			if(errno == EINTER){
 
@@ -28,10 +33,13 @@ int readn(int fd, void *vptr, int n)
 		else if (nread == 0)
 			break;
 
+		LDBG("readn nread: %d\n", nread);
+		
 		nleft -= nread;
 		ptr += nread;
 	}
 
+	LDBG("readn (n - nleft): %d\n", (n - nleft));
 	return (n - nleft);
 }
 

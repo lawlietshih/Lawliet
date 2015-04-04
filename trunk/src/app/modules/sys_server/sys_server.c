@@ -39,30 +39,34 @@ void Init_System_Server(void)
 
 void Destroy_System_Server(void)
 {
-	syssrv_run = 0;
-
 	struct sockaddr_in server_addr;
-	char send_buf[16];
+	/* Segment Size : 1. size < 1460 2. Client/Server must be consistent (receive cmd fast) */
+	int segSize = MAX_SEGSIZE;//TCP Maximum Segment Size (MSS) 
+	char send_buf[segSize];
+	char recv_buf[segSize];
 	S32 net_server_socket = -1;
 	int one = 1;
 
-	LDBG("destroy system server....\r\n");
+	LDBG("destroy system server....\n");
 	//runCmdServer = 2;
+
+	memset(send_buf, 0, sizeof(send_buf));
+	memset(recv_buf, 0, sizeof(recv_buf));
 	
 	sprintf(send_buf,"QUIT:LAWLIET");
 	if((net_server_socket = socket(AF_INET, SOCK_STREAM, 0)) == -1 ){
-		LDBG("destroy system server socket error!\r\n");
+		LDBG("destroy system server socket error!\n");
 		return;
 	}
 	
 	if(setsockopt(net_server_socket, SOL_SOCKET, SO_REUSEADDR, (char*) &one, sizeof(one)) == -1){
-		LDBG("destroy system server setsockopt error!\r\n");
+		LDBG("destroy system server setsockopt error!\n");
 		_SAFE_CLOSE(net_server_socket);
 		return;
 	}
 /*
 	if (setsockopt(net_server_socket, SOL_SOCKET, SO_REUSEPORT, (char*)&one, sizeof(one)) == -1){
-		LDBG("setsockopt error!\r\n");
+		LDBG("setsockopt error!\n");
 		_SAFE_CLOSE(net_server_socket);
 		return;
 	}
@@ -74,11 +78,17 @@ void Destroy_System_Server(void)
 	
 	if(connect(net_server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0){
 		_SAFE_CLOSE(net_server_socket);
-		LDBG("Connect to cmd_net_server error!!\r\n");
+		LDBG("Connect to cmd_net_server error!!\n");
 		return;
 	}
 
-	writen(net_server_socket, send_buf, strlen(send_buf));
+	LDBG("Client send CMD: %s\n", send_buf);
+	
+	writen(net_server_socket, send_buf, sizeof(send_buf));
+	readn(net_server_socket, recv_buf, sizeof(recv_buf));
+
+	LDBG("Client recv CMD: %s\n", recv_buf);
+	syssrv_run = 0;
 	_SAFE_CLOSE(net_server_socket);
 }
 
@@ -86,7 +96,8 @@ void *SysSrvThread(void *p)
 {
 	int SysSrvSocket = -1; 
 	int on = 1;
-	int segSize= 1200;//TCP Maximum Segment Size (MSS) 
+	/* Segment Size : 1. size < 1460 2. Client/Server must be consistent (receive cmd fast) */
+	int segSize = MAX_SEGSIZE;//TCP Maximum Segment Size (MSS) 
 	int opt_value = 1;
 	struct timeval timeout;
 	struct linger so_linger;
@@ -102,24 +113,25 @@ void *SysSrvThread(void *p)
     socklen_t client_len;
     int ClientSocket = -1;
 
-	char packetBuffer[segSize];
+	char recvBuffer[segSize];
+	char sendBuffer[segSize];
 	
 	/* TCP socket : create */
 	if((SysSrvSocket = socket(AF_INET, SOCK_STREAM, 0)) == -1){
-		LDBG("socket error!\r\n");
+		LDBG("socket error!\n");
 		return NULL;
 	}
 
 	/* socket option */
 	if(setsockopt(SysSrvSocket, SOL_SOCKET, SO_REUSEADDR, (char*)&on, sizeof(on)) == -1){
-		LDBG("setsockopt error!\r\n");
+		LDBG("setsockopt error!\n");
 		_SAFE_CLOSE(SysSrvSocket);
 		//print_errno();
 		return NULL;
 	}
 /*
 	if(setsockopt(SysSrvSocket, SOL_SOCKET, SO_REUSEPORT, (char*)&on, sizeof(on)) == -1){
-		LDBG("setsockopt error!\r\n");
+		LDBG("setsockopt error!\n");
 		_SAFE_CLOSE(SysSrvSocket);
 		//print_errno();
 		return NULL;
@@ -140,7 +152,7 @@ void *SysSrvThread(void *p)
 
 	/* server socket mode */
 	if((flags = fcntl(SysSrvSocket, F_GETFL, 0)) == -1){
-		LDBG("fcntl F_GETFL error!!\r\n");
+		LDBG("fcntl F_GETFL error!!\n");
 	}
 
 #if 0
@@ -150,7 +162,7 @@ void *SysSrvThread(void *p)
 #endif
 
 	if((fcntl(SysSrvSocket, F_SETFL, flags)) == -1){
-		LDBG("fcntl F_SETFL error!!\r\n");
+		LDBG("fcntl F_SETFL error!!\n");
 	}
 
 	/* server address */
@@ -161,24 +173,24 @@ void *SysSrvThread(void *p)
 
 	/* TCP socket : bind & listen */
 	if(bind(SysSrvSocket, (struct sockaddr *) &server_addr , sizeof(server_addr)) == -1){
-		LDBG("SysSrvSocket bind failed\r\n");
+		LDBG("SysSrvSocket bind failed\n");
 		_SAFE_CLOSE(SysSrvSocket);
 	}
 	
 	if(listen(SysSrvSocket, MAX_CFG_SERVER_LISTEN_QUEUE) == -1){//system backlog : SOMAXCONN
-		LDBG("SysSrvSocket listen failed\r\n");
+		LDBG("SysSrvSocket listen failed\n");
 	}
 
-	/* epoll or select */
+	/* epoll add SysSrvSocket to SysSrvEpoll */
 	if((SysSrvEpoll = epoll_create1(0)) == -1){
-		LDBG("SysSrvEpoll create failed\r\n");
+		LDBG("SysSrvEpoll create failed\n");
 	}
 
 	event.data.fd = SysSrvSocket;
   	event.events = EPOLLIN | EPOLLET;
 
 	if(epoll_ctl(SysSrvEpoll, EPOLL_CTL_ADD, SysSrvSocket, &event) == -1){
-		LDBG("SysSrvEpoll control failed\r\n");
+		LDBG("SysSrvEpoll control failed\n");
 	}
 
 	/* Buffer where events are returned */
@@ -199,11 +211,10 @@ void *SysSrvThread(void *p)
 				LDBG("sys_server epoll_wait...tiomeout : %d s !\n", (SYSSRV_TIMEOUT/1000));
 				break;
 			default:
-
-				memset(packetBuffer, 0, segSize);
 				
 				for (i=0; i<n; i++){
-			
+					
+					LDBG("---------------------------\n");
 					LDBG("events[%d].data.fd : %d\n", i, events[i].data.fd);
 					LDBG("events[%d].events  : %d\n", i, events[i].events);
 
@@ -216,8 +227,9 @@ void *SysSrvThread(void *p)
 					//LDBG("EPOLLET      : %d\n", EPOLLET);//
 					//LDBG("EPOLLONESHOT : %d\n", EPOLLONESHOT);//Linux 2.6.2
 					//LDBG("EPOLLWAKEUP  : %d\n", EPOLLWAKEUP);//Linux 3.5
-			
-					if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP) || (!(events[i].events & EPOLLIN))){
+					LDBG("---------------------------\n");
+					
+					if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP)){
 						LDBG ("SysSrvEpoll error\n");
           				_SAFE_CLOSE (events[i].data.fd);
           				continue;
@@ -237,30 +249,75 @@ void *SysSrvThread(void *p)
 
 						/* client socket mode */
 						if((flags = fcntl(ClientSocket, F_GETFL, 0)) == -1){
-							LDBG("fcntl F_GETFL error!!\r\n");
+							LDBG("fcntl F_GETFL error!!\n");
 						}
 
 						flags |= O_NONBLOCK;//non-blocking
 
 						if((fcntl(ClientSocket, F_SETFL, flags)) == -1){
-							LDBG("fcntl F_SETFL error!!\r\n");
+							LDBG("fcntl F_SETFL error!!\n");
 						}
 
-						/* epoll or select */
+						/* epoll add ClientSocket to SysSrvEpoll */
 						event.data.fd = ClientSocket;
   						event.events = EPOLLIN | EPOLLET;
 
 						if(epoll_ctl(SysSrvEpoll, EPOLL_CTL_ADD, ClientSocket, &event) == -1){
-							LDBG("SysSrvEpoll control failed\r\n");
+							LDBG("SysSrvEpoll control failed\n");
 						}
 					}
 
 					if(events[i].events & EPOLLIN){
 						LDBG("Epoll Event : EPOLLIN !\n");
-						readn(ClientSocket, packetBuffer, segSize);
-						LDBG("CMD : %s\n", packetBuffer);
-					}else if(events[i].events & EPOLLOUT){
+						memset(recvBuffer, 0, segSize);
+						readn(ClientSocket, recvBuffer, segSize);
+						LDBG("Server recv CMD: %s\n", recvBuffer);
+
+						/* client socket mode */
+						if((flags = fcntl(ClientSocket, F_GETFL, 0)) == -1){
+							LDBG("fcntl F_GETFL error!!\n");
+						}
+
+						flags |= O_NONBLOCK;//non-blocking
+
+						if((fcntl(ClientSocket, F_SETFL, flags)) == -1){
+							LDBG("fcntl F_SETFL error!!\n");
+						}
+
+						/* epoll modify ClientSocket to SysSrvEpoll : EPOLLOUT */
+						event.data.fd = ClientSocket;
+						event.events = EPOLLOUT | EPOLLET;
+
+						if(epoll_ctl(SysSrvEpoll, EPOLL_CTL_MOD, ClientSocket, &event) == -1){
+							LDBG("SysSrvEpoll control failed\n");
+						}
+					}
+
+					if(events[i].events & EPOLLOUT){
 						LDBG("Epoll Event : EPOLLOUT !\n");
+						memset(sendBuffer, 0, segSize);
+						sprintf(sendBuffer,"ACK:OK");
+						LDBG("Server send CMD: %s\n", sendBuffer);
+						writen(ClientSocket, sendBuffer, segSize);
+
+						/* client socket mode */
+						if((flags = fcntl(ClientSocket, F_GETFL, 0)) == -1){
+							LDBG("fcntl F_GETFL error!!\n");
+						}
+
+						flags |= O_NONBLOCK;//non-blocking
+
+						if((fcntl(ClientSocket, F_SETFL, flags)) == -1){
+							LDBG("fcntl F_SETFL error!!\n");
+						}
+
+						/* epoll modify ClientSocket to SysSrvEpoll : EPOLLIN */
+						event.data.fd = ClientSocket;
+						event.events = EPOLLIN | EPOLLET;
+
+						if(epoll_ctl(SysSrvEpoll, EPOLL_CTL_MOD, ClientSocket, &event) == -1){
+							LDBG("SysSrvEpoll control failed\n");
+						}
 					}
 				}
 				break;
