@@ -76,7 +76,7 @@ git reset --soft "HEAD^"
 
 git push -u origin master = git fetch + git merge origin/master
 Username for 'https://github.com': lawlietshih         
-Password for 'https://lawlietshih@github.com': "
+Password for 'https://lawlietshih@github.com':
 
 --------------------------------------------------------------------------------------------------------
 
