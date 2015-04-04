@@ -233,7 +233,9 @@ void *SysSrvThread(void *p)
 						LDBG ("SysSrvEpoll error\n");
           				_SAFE_CLOSE (events[i].data.fd);
           				continue;
-					}else if(SysSrvSocket == events[i].data.fd){
+					}
+
+					if(SysSrvSocket == events[i].data.fd){
                 		client_len = sizeof(client_addr);
 						/* TCP socket : accept */
                 		ClientSocket = accept(SysSrvSocket, &client_addr, &client_len);
@@ -267,56 +269,59 @@ void *SysSrvThread(void *p)
 						}
 					}
 
-					if(events[i].events & EPOLLIN){
-						LDBG("Epoll Event : EPOLLIN !\n");
-						memset(recvBuffer, 0, segSize);
-						readn(ClientSocket, recvBuffer, segSize);
-						LDBG("Server recv CMD: %s\n", recvBuffer);
+					if(ClientSocket == events[i].data.fd){
 
-						/* client socket mode */
-						if((flags = fcntl(ClientSocket, F_GETFL, 0)) == -1){
-							LDBG("fcntl F_GETFL error!!\n");
+						if(events[i].events & EPOLLIN){
+							LDBG("Epoll Event : EPOLLIN !\n");
+							memset(recvBuffer, 0, segSize);
+							readn(ClientSocket, recvBuffer, segSize);
+							LDBG("Server recv CMD: %s\n", recvBuffer);
+
+							/* client socket mode */
+							if((flags = fcntl(ClientSocket, F_GETFL, 0)) == -1){
+								LDBG("fcntl F_GETFL error!!\n");
+							}
+
+							flags |= O_NONBLOCK;//non-blocking
+
+							if((fcntl(ClientSocket, F_SETFL, flags)) == -1){
+								LDBG("fcntl F_SETFL error!!\n");
+							}
+
+							/* epoll modify ClientSocket to SysSrvEpoll : EPOLLOUT */
+							event.data.fd = ClientSocket;
+							event.events = EPOLLOUT | EPOLLET;
+
+							if(epoll_ctl(SysSrvEpoll, EPOLL_CTL_MOD, ClientSocket, &event) == -1){
+								LDBG("SysSrvEpoll control failed\n");
+							}
 						}
 
-						flags |= O_NONBLOCK;//non-blocking
+						if(events[i].events & EPOLLOUT){
+							LDBG("Epoll Event : EPOLLOUT !\n");
+							memset(sendBuffer, 0, segSize);
+							sprintf(sendBuffer,"ACK:OK");
+							LDBG("Server send CMD: %s\n", sendBuffer);
+							writen(ClientSocket, sendBuffer, segSize);
 
-						if((fcntl(ClientSocket, F_SETFL, flags)) == -1){
-							LDBG("fcntl F_SETFL error!!\n");
-						}
+							/* client socket mode */
+							if((flags = fcntl(ClientSocket, F_GETFL, 0)) == -1){
+								LDBG("fcntl F_GETFL error!!\n");
+							}
 
-						/* epoll modify ClientSocket to SysSrvEpoll : EPOLLOUT */
-						event.data.fd = ClientSocket;
-						event.events = EPOLLOUT | EPOLLET;
+							flags |= O_NONBLOCK;//non-blocking
 
-						if(epoll_ctl(SysSrvEpoll, EPOLL_CTL_MOD, ClientSocket, &event) == -1){
-							LDBG("SysSrvEpoll control failed\n");
-						}
-					}
+							if((fcntl(ClientSocket, F_SETFL, flags)) == -1){
+								LDBG("fcntl F_SETFL error!!\n");
+							}
 
-					if(events[i].events & EPOLLOUT){
-						LDBG("Epoll Event : EPOLLOUT !\n");
-						memset(sendBuffer, 0, segSize);
-						sprintf(sendBuffer,"ACK:OK");
-						LDBG("Server send CMD: %s\n", sendBuffer);
-						writen(ClientSocket, sendBuffer, segSize);
+							/* epoll modify ClientSocket to SysSrvEpoll : EPOLLIN */
+							event.data.fd = ClientSocket;
+							event.events = EPOLLIN | EPOLLET;
 
-						/* client socket mode */
-						if((flags = fcntl(ClientSocket, F_GETFL, 0)) == -1){
-							LDBG("fcntl F_GETFL error!!\n");
-						}
-
-						flags |= O_NONBLOCK;//non-blocking
-
-						if((fcntl(ClientSocket, F_SETFL, flags)) == -1){
-							LDBG("fcntl F_SETFL error!!\n");
-						}
-
-						/* epoll modify ClientSocket to SysSrvEpoll : EPOLLIN */
-						event.data.fd = ClientSocket;
-						event.events = EPOLLIN | EPOLLET;
-
-						if(epoll_ctl(SysSrvEpoll, EPOLL_CTL_MOD, ClientSocket, &event) == -1){
-							LDBG("SysSrvEpoll control failed\n");
+							if(epoll_ctl(SysSrvEpoll, EPOLL_CTL_MOD, ClientSocket, &event) == -1){
+								LDBG("SysSrvEpoll control failed\n");
+							}
 						}
 					}
 				}
