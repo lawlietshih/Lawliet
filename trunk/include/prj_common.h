@@ -10,6 +10,10 @@
 extern "C" {
 #endif
 
+/*
+	@Coding Style for Lawliet
+*/
+
 /* Nice LEVEL definitions */
 #define NICE_LEVELM20	-20
 #define NICE_LEVELM15	-15

@@ -1,11 +1,16 @@
 #include "../include/utility.h"
 
 /*
+	@http://man7.org/
+*/
+
+/*
 	@socket
 
 	#include <sys/types.h>
 	#include <sys/socket.h>
 	int socket(int domain, int type, int protocol);
+	int socket(int socket_family, int socket_type, int protocol);
 
 	@param
 	
@@ -14,6 +19,10 @@
 
 	type            : Socket   Type
 	protocol        : Protocol Type
+
+	@return value
+	-1     : error
+	others : fd
 
 	---------------------------------------------------------------------
 
@@ -24,6 +33,37 @@
 	send : AF_INET + SOCK_RAW + IPPROTO_ICMP (Layer 3 : IP       Layer)
 	send : PF_PACKET/AF_PACKET + SOCK_RAW    (Layer 2 : Ethernet Layer)
 	recv : AF_INET + SOCK_RAW
+*/
+
+/*
+	@System Call
+
+	#include <stdlib.h>
+	int system(const char *command);
+
+	@return value
+	-1 :error
+*/
+
+/*
+	@close
+
+	#include <unistd.h>
+    int close(int fd);
+
+	@return value
+	-1 : error
+	 0 : sucess
+*/
+
+/*
+	@scanf
+
+	#include <stdio.h>
+    int scanf(const char *format, ...);
+
+    @return value
+    the number of argument
 */
 
 int readn(int fd, void *vptr, int n)
@@ -150,6 +190,16 @@ void Lawliet_Clear_Flg(unsigned char a, unsigned char b)
 	}
 }
 
+/**
+ * @brief
+ * Check CPU Endian
+ *
+ * @param NA
+ *
+ * @return
+ * 1 : Big Endian
+ * 0 : Little Endian
+ */
 int Lawliet_Check_CPUendian(void)
 {
   /*

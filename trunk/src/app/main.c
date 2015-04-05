@@ -15,40 +15,16 @@
 #include "../../utility/include/utility.h"
 #include "include/app_common.h"
 
+#define SYS_OPTION	1
+
+void ( *OperSys[] )(void)={shutdown_system,
+                          };
+
 int lawliet_run = 1;
-
-void ShutdownLawlietSystem(int signo)
-{
-	Lawliet_APP_Stop();
-	sleep(5);
- 	lawliet_run = 0;
-}
-
-int LinuxSignalInitial(void)
-{
- 	int ret = 0; 
- 	if(signal(SIGUSR2, ShutdownLawlietSystem) != SIG_ERR){
- 		LDBG("Linux Signal Init !\t(Signal 12)\n");
- 	}else{
- 		ret = -1;
- 	}
-
-	return ret;
-}
-
-void Lawliet_APP_Start(void)
-{
-	Init_System_Server();
-}
-
-void Lawliet_APP_Stop(void)
-{
-	Destroy_System_Server();
-}
 
 int main(int argc, char *argv[])
 {
-	//int i = 0;
+	int choice = 0;
 	int cpu_endian = -1;
 	LDBG("=====================================\n");
 	LDBG("   Project Lawliet : Start Success\n");
@@ -59,7 +35,7 @@ int main(int argc, char *argv[])
     }
 	
 	/*
-	if(system("./boa -c /etc/boa &")){
+	if(system("./boa -c /etc/boa &") == -1){
 		LDBG("Boa Server : Start Failed\n");
 	}else{
 		LDBG("Boa Server : Start Sucess\n");
@@ -80,10 +56,33 @@ int main(int argc, char *argv[])
 	Lawliet_APP_Start();
 	
 	//-----------------------------------------------------------------------------------
+
+	//if(system("clear") == -1){
+	//	LDBG("Error : System Call Failed !");
+	//}
 	
-	while(lawliet_run){
-		LDBG("Lawliet Core Task live... !\n");
-		sleep(10);
+	choice = sys_setting();
+	
+	//if(system("clear") == -1){
+	//	LDBG("Error : System Call Failed !");
+	//}
+
+	while(lawliet_run)
+	{
+		if((choice >= 0) && (choice < SYS_OPTION)){
+			( *OperSys[choice] )();
+
+			if(choice != 0){
+				choice = sys_setting();
+				//if(system("clear") == -1){
+				//	LDBG("Error : System Call Failed !");
+				//}
+				}
+		}else{
+			choice = 0;//shutdown
+		}
+
+		//LDBG("Lawliet Core Task live... !\n");
 	}
 	
 	LDBG("Lawliet Core Task 881... !\n");
@@ -91,12 +90,70 @@ int main(int argc, char *argv[])
 	LDBG("=====================================\n");
 	LDBG("   Project Lawliet : Stop  Success\n");
 	LDBG("=====================================\n");
+	
 #if 0
+	int i = 0;
 	for(i = 0; i < 140; ++i)
 	{
 		errno = i;
 		print_errno(errno);
 	}
 #endif
+
 	return 0;
+}
+
+int sys_setting(void)
+{
+	int key = 0;
+	LDBG("\n");
+	LDBG("-------- Project Lawliet : Sys Setting -----------\n");
+	LDBG("\n");
+	LDBG("Which option do you choose ? \n");
+	LDBG("1.Shutdown \n");
+	LDBG("\n");
+	LDBG("others >> Quit \n");
+	LDBG("--------------------------------------------------\n");
+	LDBG("Please input digital number: 1-%d\n",SYS_OPTION);
+	LDBG("\n");
+	LDBG("Your choice is :");
+	if(scanf("%d",&key) != 1){
+		LDBG("Please input a arg -> digital number: 1-%d\n",SYS_OPTION);
+		LDBG("\n");
+	}
+	return key-1;
+}
+
+void ShutdownLawlietSystem(int signo)
+{
+	Lawliet_APP_Stop();
+	sleep(5);
+	lawliet_run = 0;
+}
+
+void shutdown_system(void)
+{
+	ShutdownLawlietSystem(12);
+}
+
+int LinuxSignalInitial(void)
+{
+	int ret = 0;
+	if(signal(SIGUSR2, ShutdownLawlietSystem) != SIG_ERR){
+		LDBG("Linux Signal Init !\t(Signal 12)\n");
+	}else{
+		ret = -1;
+	}
+
+	return ret;
+}
+
+void Lawliet_APP_Start(void)
+{
+	Init_System_Server();
+}
+
+void Lawliet_APP_Stop(void)
+{
+	Destroy_System_Server();
 }

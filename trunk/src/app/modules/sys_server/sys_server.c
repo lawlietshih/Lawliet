@@ -208,7 +208,7 @@ void *SysSrvThread(void *p)
 				LDBG("sys_server epoll_wait...error !\n");
 				break;
 			case  0:
-				LDBG("sys_server epoll_wait...tiomeout : %d s !\n", (SYSSRV_TIMEOUT/1000));
+				//LDBG("sys_server epoll_wait...tiomeout : %d s !\n", (SYSSRV_TIMEOUT/1000));
 				break;
 			default:
 				
@@ -328,8 +328,7 @@ void *SysSrvThread(void *p)
 				break;
 		}
 		
-		LDBG("sys_server live... !\n");
-		//sleep(3);
+		//LDBG("sys_server live... !\n");
 	}
 
 	free(events);

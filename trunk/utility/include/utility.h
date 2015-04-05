@@ -24,16 +24,6 @@ void print_errno(int err_no);
 void Lawliet_Set_Flg(unsigned char a, unsigned char b);
 void Lawliet_Clear_Flg(unsigned char a, unsigned char b);
 
-/** 
- * @brief 
- * Check CPU Endian
- * 
- * @param NA
- *
- * @return
- * 1 : Big Endian 
- * 0 : Little Endian
- */
 int Lawliet_Check_CPUendian(void);
 
 #ifdef __cplusplus

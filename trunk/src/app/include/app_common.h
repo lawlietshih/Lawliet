@@ -25,6 +25,10 @@ void Destroy_System_Server(void);
 void Lawliet_APP_Start(void);
 void Lawliet_APP_Stop(void);
 
+int sys_setting(void);
+void ShutdownLawlietSystem(int signo);
+void shutdown_system(void);
+int LinuxSignalInitial(void);
 
 #ifdef __cplusplus
 }
