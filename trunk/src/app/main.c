@@ -34,13 +34,11 @@ int main(int argc, char *argv[])
 		 LDBG("Linux Signal : register failed!\n");
     }
 	
-	/*
 	if(system("./boa -c /etc/boa &") == -1){
 		LDBG("Boa Server : Start Failed\n");
 	}else{
 		LDBG("Boa Server : Start Sucess\n");
 	}
-	*/
 
 	/* Host byte order */
 	cpu_endian = Lawliet_Check_CPUendian();
