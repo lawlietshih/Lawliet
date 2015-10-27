@@ -1,5 +1,6 @@
 #Makefile for Project Lawliet
 
+SUPPORT_LAWLIET=Y
 TOP_DIR=$(PWD)
 SRC=$(TOP_DIR)/src
 APP_DIR=$(SRC)/app
@@ -42,7 +43,7 @@ user_app:
 	echo "make AP..."
 	rm -rf $(RELEASE_DIR)/*_ap_*
 	make -j6 -C $(APP_DIR) clean
-	make -j6 -C $(APP_DIR)
+	make -j6 -C $(APP_DIR) SUPPORT_LAWLIET=$(SUPPORT_LAWLIET)
 	cd $(TOP_DIR)
 
 firmware: utility_libs user_app

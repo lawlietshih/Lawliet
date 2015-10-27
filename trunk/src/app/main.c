@@ -52,6 +52,12 @@ int main(int argc, char *argv[])
 	}
 	
 	Lawliet_APP_Start();
+
+#ifdef SUPPORT_LAWLIET
+	LDBG("SUPPORT_LAWLIET !\n");
+#else
+	LDBG("NOT SUPPORT_LAWLIET !\n");
+#endif
 	
 	//-----------------------------------------------------------------------------------
 

@@ -45,6 +45,10 @@ INCLUDE_DIR:=-I$(PROJECT_ROOT)/include/
 CFLAGS:= -g -Wall -O2 -Werror -Wunused-function -Wunused-label -Wunused-value -Wunused-variable
 CFLAGS+= $(INCLUDE_DIR)
 
+ifeq ($(SUPPORT_LAWLIET), Y)
+CFLAGS+=-DSUPPORT_LAWLIET
+endif
+
 .PHONY:all modules modules_clean third third_clean clean kill_proc
 
 all: $(EXEC_NAME)
